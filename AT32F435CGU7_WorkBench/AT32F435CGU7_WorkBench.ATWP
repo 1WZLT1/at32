@@ -29,7 +29,7 @@
     </SYSTEM>
     <NVIC>
         <ShowType>0</ShowType>
-        <SysTick_Handler>1;15;0;0;0</SysTick_Handler>
+        <SysTick_Handler>1;0;0;0;0</SysTick_Handler>
         <FLASH_IRQHandler>0;0;0;0;0</FLASH_IRQHandler>
         <CRM_IRQHandler>0;0;0;0;0</CRM_IRQHandler>
         <DVP_IRQHandler>0;0;0;0;0</DVP_IRQHandler>

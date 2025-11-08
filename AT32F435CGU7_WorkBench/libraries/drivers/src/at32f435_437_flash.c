@@ -119,10 +119,10 @@ void flash_flag_clear(uint32_t flash_flag)
 }
 
 /**
-  * @brief  return the flash operation status.
-  * @param  none
-  * @retval status: the returned value can be: FLASH_OPERATE_BUSY,
-  *         FLASH_PROGRAM_ERROR, FLASH_EPP_ERROR or FLASH_OPERATE_DONE.
+  * @brief    return the flash operation status.
+  * @param    none
+  * @retval   status: the returned value can be: FLASH_OPERATE_BUSY,
+  *           FLASH_PROGRAM_ERROR, FLASH_EPP_ERROR or FLASH_OPERATE_DONE.
   */
 flash_status_type flash_operation_status_get(void)
 {
@@ -156,21 +156,21 @@ flash_status_type flash_operation_status_get(void)
 flash_status_type flash_bank1_operation_status_get(void)
 {
   flash_status_type flash_status = FLASH_OPERATE_DONE;
-  if(FLASH->sts_bit.obf != RESET)
+  if(FLASH->sts_bit.obf != RESET)/*总线是否在读写*/
   {
     flash_status = FLASH_OPERATE_BUSY;
   }
-  else if(FLASH->sts_bit.prgmerr != RESET)
+  else if(FLASH->sts_bit.prgmerr != RESET)/*该扇区是否为不可以编程状态*/
   {
     flash_status = FLASH_PROGRAM_ERROR;
   }
-  else if(FLASH->sts_bit.epperr != RESET)
+  else if(FLASH->sts_bit.epperr != RESET)/*该扇区为不可擦写状态*/
   {
     flash_status = FLASH_EPP_ERROR;
   }
   else
   {
-    flash_status = FLASH_OPERATE_DONE;
+    flash_status = FLASH_OPERATE_DONE;/*完成状态获取*/
   }
   /* return the flash status */
   return flash_status;
@@ -240,16 +240,16 @@ flash_status_type flash_bank1_operation_wait_for(uint32_t time_out)
 {
   flash_status_type status = FLASH_OPERATE_DONE;
   /* check for the flash status */
-  status = flash_bank1_operation_status_get();
+  status = flash_bank1_operation_status_get();/*sts1几个状态获取一下*/
 
-  while((status == FLASH_OPERATE_BUSY) && (time_out != 0x00))
+  while((status == FLASH_OPERATE_BUSY) && (time_out != 0x00))//flash表示还没有写成功
   {
     status = flash_bank1_operation_status_get();
     time_out--;
   }
   if(time_out == 0x00)
   {
-    status = FLASH_OPERATE_TIMEOUT;
+    status = FLASH_OPERATE_TIMEOUT;//溢出
   }
   /* return the operation status */
   return status;
@@ -347,7 +347,7 @@ void flash_bank2_lock(void)
 }
 
 /**
-  * @brief  erase a specified flash sector.
+  * @brief  erase a specified flash sector. 闪存擦除
   * @param  sector_address: the sector address to be erased.
   * @retval status: the returned value can be: FLASH_PROGRAM_ERROR,
   *         FLASH_EPP_ERROR, FLASH_OPERATE_DONE or FLASH_OPERATE_TIMEOUT.
@@ -355,17 +355,17 @@ void flash_bank2_lock(void)
 flash_status_type flash_sector_erase(uint32_t sector_address)
 {
   flash_status_type status = FLASH_OPERATE_DONE;
-  if((sector_address >= FLASH_BANK1_START_ADDR) && (sector_address <= FLASH_BANK1_END_ADDR))
+  if((sector_address >= FLASH_BANK1_START_ADDR) && (sector_address <= FLASH_BANK1_END_ADDR))/*范围内*/
   {
-    FLASH->ctrl_bit.secers = TRUE;
+    FLASH->ctrl_bit.secers = TRUE;//闪存1可擦除
     FLASH->addr = sector_address;
-    FLASH->ctrl_bit.erstr = TRUE;
+    FLASH->ctrl_bit.erstr = TRUE;//开始擦除
 
     /* wait for operation to be completed */
-    status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);
+    status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);//状态获取
 
     /* disable the secers bit */
-    FLASH->ctrl_bit.secers = FALSE;
+    FLASH->ctrl_bit.secers = FALSE;//闪存1不可擦除
   }
   else if((sector_address >= FLASH_BANK2_START_ADDR) && (sector_address <= FLASH_BANK2_END_ADDR))
   {
@@ -395,15 +395,15 @@ flash_status_type flash_block_erase(uint32_t block_address)
   flash_status_type status = FLASH_OPERATE_DONE;
   if((block_address >= FLASH_BANK1_START_ADDR) && (block_address <= FLASH_BANK1_END_ADDR))
   {
-    FLASH->ctrl_bit.blkers = TRUE;
+    FLASH->ctrl_bit.blkers = TRUE;//区块操作
     FLASH->addr = block_address;
-    FLASH->ctrl_bit.erstr = TRUE;
+    FLASH->ctrl_bit.erstr = TRUE;//可擦除
 
     /* wait for operation to be completed */
-    status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);
+    status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);//状态获取
 
     /* disable the blkers bit */
-    FLASH->ctrl_bit.blkers = FALSE;
+    FLASH->ctrl_bit.blkers = FALSE;//不可擦除
   }
   else if((block_address >= FLASH_BANK2_START_ADDR) && (block_address <= FLASH_BANK2_END_ADDR))
   {
@@ -432,19 +432,19 @@ flash_status_type flash_internal_all_erase(void)
 {
   flash_status_type status = FLASH_OPERATE_DONE;
 
-  FLASH->ctrl_bit.bankers = TRUE;
-  FLASH->ctrl_bit.erstr = TRUE;
+  FLASH->ctrl_bit.bankers = TRUE;//flash section1可操作开
+  FLASH->ctrl_bit.erstr = TRUE;//flash section1擦开
 
   /* wait for operation to be completed */
-  status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);
+  status = flash_bank1_operation_wait_for(ERASE_TIMEOUT);//等待
 
   /* disable the bankers bit */
-  FLASH->ctrl_bit.bankers = FALSE;
+  FLASH->ctrl_bit.bankers = FALSE;//全芯片可操作关闭
 
-  if(status == FLASH_OPERATE_DONE)
+  if(status == FLASH_OPERATE_DONE)//无错误
   {
     /* if the previous operation is completed, continue to erase bank2 */
-    FLASH->ctrl2_bit.bankers = TRUE;
+    FLASH->ctrl2_bit.bankers = TRUE;//再擦flash2
     FLASH->ctrl2_bit.erstr = TRUE;
 
     /* wait for operation to be completed */
@@ -504,7 +504,7 @@ flash_status_type flash_bank2_erase(void)
 }
 
 /**
-  * @brief  erase the flash user system data.
+  * @brief  erase the flash user system data. 擦除用户系统数据
   * @note   this functions erase all user system data except the fap byte.
   *         the eopb0 byte value change to 0xFF, sram size maybe change too.
   * @param  none
@@ -522,19 +522,19 @@ flash_status_type flash_user_system_data_erase(void)
   }
 
   /* unlock the user system data */
-  FLASH->usd_unlock = FLASH_UNLOCK_KEY1;
+  FLASH->usd_unlock = FLASH_UNLOCK_KEY1;/*闪存用户系统数据*/
   FLASH->usd_unlock = FLASH_UNLOCK_KEY2;
-  while(FLASH->ctrl_bit.usdulks==RESET);
+  while(FLASH->ctrl_bit.usdulks==RESET);//一直等待用户数据区可操作
 
   /* erase the user system data */
-  FLASH->ctrl_bit.usders = TRUE;
-  FLASH->ctrl_bit.erstr = TRUE;
+  FLASH->ctrl_bit.usders = TRUE;//用户数据区擦除
+  FLASH->ctrl_bit.erstr = TRUE;//开始擦除
 
   /* wait for operation to be completed */
-  status = flash_operation_wait_for(ERASE_TIMEOUT);
+  status = flash_operation_wait_for(ERASE_TIMEOUT);//等待
 
   /* disable the usders bit */
-  FLASH->ctrl_bit.usders = FALSE;
+  FLASH->ctrl_bit.usders = FALSE;//用户擦除结束
 
   if((status == FLASH_OPERATE_DONE) && (fap_val == FAP_RELIEVE_KEY))
   {
@@ -570,6 +570,7 @@ flash_status_type flash_user_system_data_erase(void)
   *         - FLASH_EOPB0_SRAM_128K
   * @retval status: the returned value can be: FLASH_PROGRAM_ERROR,
   *         FLASH_EPP_ERROR, FLASH_OPERATE_DONE or FLASH_OPERATE_TIMEOUT.
+  * @explain 
   */
 flash_status_type flash_eopb0_config(flash_usd_eopb0_type data)
 {
@@ -578,19 +579,19 @@ flash_status_type flash_eopb0_config(flash_usd_eopb0_type data)
   /* unlock the user system data */
   FLASH->usd_unlock = FLASH_UNLOCK_KEY1;
   FLASH->usd_unlock = FLASH_UNLOCK_KEY2;
-  while(FLASH->ctrl_bit.usdulks==RESET);
+  while(FLASH->ctrl_bit.usdulks==RESET);//表示解锁成功
 
   /* enable the user system data programming operation */
-  FLASH->ctrl_bit.usdprgm = TRUE;
+  FLASH->ctrl_bit.usdprgm = TRUE;//用户数据区编程开始
 
   /* restore the default eopb0 value */
-  USD->eopb0 = (uint16_t)data;
+  USD->eopb0 = (uint16_t)data;//设置闪存零等待延迟区域大小 sram区域大小
 
   /* wait for operation to be completed */
-  status = flash_operation_wait_for(PROGRAMMING_TIMEOUT);
+  status = flash_operation_wait_for(PROGRAMMING_TIMEOUT);//等待
 
   /*disable the usdprgm bit */
-  FLASH->ctrl_bit.usdprgm = FALSE;
+  FLASH->ctrl_bit.usdprgm = FALSE;//用户数据区编程关闭
 
   /* return the status */
   return status;
@@ -606,17 +607,17 @@ flash_status_type flash_eopb0_config(flash_usd_eopb0_type data)
 flash_status_type flash_word_program(uint32_t address, uint32_t data)
 {
   flash_status_type status = FLASH_OPERATE_DONE;
-  if((address >= FLASH_BANK1_START_ADDR) && (address <= FLASH_BANK1_END_ADDR))
+  if((address >= FLASH_BANK1_START_ADDR) && (address <= FLASH_BANK1_END_ADDR))/*片区1*/
   {
-    FLASH->ctrl_bit.fprgm = TRUE;
+    FLASH->ctrl_bit.fprgm = TRUE;/*闪存编程操作*/
     *(__IO uint32_t*)address = data;
     /* wait for operation to be completed */
-    status = flash_bank1_operation_wait_for(PROGRAMMING_TIMEOUT);
+    status = flash_bank1_operation_wait_for(PROGRAMMING_TIMEOUT);/*等待*/
 
     /* disable the fprgm bit */
     FLASH->ctrl_bit.fprgm = FALSE;
   }
-  else if((address >= FLASH_BANK2_START_ADDR) && (address <= FLASH_BANK2_END_ADDR))
+  else if((address >= FLASH_BANK2_START_ADDR) && (address <= FLASH_BANK2_END_ADDR))/*片区2*/
   {
     FLASH->ctrl2_bit.fprgm = TRUE;
     *(__IO uint32_t*)address = data;
@@ -714,21 +715,21 @@ flash_status_type flash_user_system_data_program(uint32_t address, uint8_t data)
 
   if(address == USD_BASE)
   {
-    if(data != 0xA5)
+    if(data != 0xA5)/*0xA5内存访问保护解除 0xFF内存访问保护启动*/
       return FLASH_OPERATE_DONE;
   }
   
   /* unlock the user system data */
   FLASH->usd_unlock = FLASH_UNLOCK_KEY1;
   FLASH->usd_unlock = FLASH_UNLOCK_KEY2;
-  while(FLASH->ctrl_bit.usdulks==RESET);
+  while(FLASH->ctrl_bit.usdulks==RESET);//判断用户系统区是否正常解锁成功
 
   /* enable the user system data programming operation */
-  FLASH->ctrl_bit.usdprgm = TRUE;
+  FLASH->ctrl_bit.usdprgm = TRUE;//用户系统区打开
   *(__IO uint16_t*)address = data;
 
   /* wait for operation to be completed */
-  status = flash_operation_wait_for(PROGRAMMING_TIMEOUT);
+  status = flash_operation_wait_for(PROGRAMMING_TIMEOUT);/*等待操作成功*/
 
   /* disable the usdprgm bit */
   FLASH->ctrl_bit.usdprgm = FALSE;
@@ -738,7 +739,7 @@ flash_status_type flash_user_system_data_program(uint32_t address, uint8_t data)
 }
 
 /**
-  * @brief  config erase/program protection for the desired sectors.
+  * @brief  config erase/program protection for the desired sectors. 设置擦写保护扇区
   * @param  sector_bits(1:ENABLE, 0:DISABLE)
   *         the pointer of the address of the sectors to be erase/program protected.
   *         general bit 0~31 every bit is used to protect the 4KB bytes, bit 62~32
@@ -750,7 +751,7 @@ flash_status_type flash_epp_set(uint32_t *sector_bits)
 {
   uint16_t epp_data[4] = {0xFFFF,0xFFFF,0xFFFF,0xFFFF};
   flash_status_type status = FLASH_OPERATE_DONE;
-  sector_bits[0] = (uint32_t)(~sector_bits[0]);
+  sector_bits[0] = (uint32_t)(~sector_bits[0]);//取反的目的只是因为他这个1是enable 手册0是enable
   epp_data[0] = (uint16_t)((sector_bits[0] >> 0) & 0xFF);
   epp_data[1] = (uint16_t)((sector_bits[0] >> 8) & 0xFF);
   epp_data[2] = (uint16_t)((sector_bits[0] >> 16) & 0xFF);
@@ -762,11 +763,11 @@ flash_status_type flash_epp_set(uint32_t *sector_bits)
   while(FLASH->ctrl_bit.usdulks==RESET);
 
   FLASH->ctrl_bit.usdprgm = TRUE;
-  USD->epp0 = epp_data[0];
+  USD->epp0 = epp_data[0];/*设置擦写保护 0开启擦写保护 1关闭擦写保护 epp0每bit为4kb*/
   /* wait for operation to be completed */
   status = flash_operation_wait_for(PROGRAMMING_TIMEOUT);
 
-  if(status == FLASH_OPERATE_DONE)
+  if(status == FLASH_OPERATE_DONE)/*这里是必定进去的*/
   {
     USD->epp1 = epp_data[1];
     /* wait for operation to be completed */
@@ -852,13 +853,13 @@ flash_status_type flash_fap_enable(confirm_state new_state)
   FLASH->usd_unlock = FLASH_UNLOCK_KEY2;
   while(FLASH->ctrl_bit.usdulks==RESET);
 
-  FLASH->ctrl_bit.usders = TRUE;
-  FLASH->ctrl_bit.erstr = TRUE;
+  FLASH->ctrl_bit.usders = TRUE;//用户系统数据擦除
+  FLASH->ctrl_bit.erstr = TRUE;//开始擦除
   /* wait for operation to be completed */
   status = flash_operation_wait_for(ERASE_TIMEOUT);
 
   /* disable the usders bit */
-  FLASH->ctrl_bit.usders = FALSE;
+  FLASH->ctrl_bit.usders = FALSE;/*用户系统数据擦除结束*/
 
   if(status == FLASH_OPERATE_DONE)
   {
@@ -866,19 +867,19 @@ flash_status_type flash_fap_enable(confirm_state new_state)
     FLASH->ctrl_bit.usdprgm = TRUE;
 
     /* restore the default eopb0 value */
-    USD->eopb0 = (uint16_t)0x0002;
+    USD->eopb0 = (uint16_t)0x0002;//将片上sram 和 闪存零缓冲配置成出场设置
 
     /* Wait for operation to be completed */
     status = flash_operation_wait_for(ERASE_TIMEOUT);
 
-    if(new_state == FALSE)
+    if(new_state == FALSE)//设置状态为关闭闪存保护解锁
     {
-      USD->fap = FAP_RELIEVE_KEY;
+      USD->fap = FAP_RELIEVE_KEY;//允许闪存写入
       /* Wait for operation to be completed */
       status = flash_operation_wait_for(ERASE_TIMEOUT);
     }
     /* disable the usdprgm bit */
-    FLASH->ctrl_bit.usdprgm = FALSE;
+    FLASH->ctrl_bit.usdprgm = FALSE;//usd编程关闭
   }
 
   /* return the flash access protection operation status */
@@ -933,7 +934,7 @@ flash_status_type flash_ssb_set(uint8_t usd_ssb)
   /* unlock the user system data */
   FLASH->usd_unlock = FLASH_UNLOCK_KEY1;
   FLASH->usd_unlock = FLASH_UNLOCK_KEY2;
-  while(FLASH->ctrl_bit.usdulks==RESET);
+  while(FLASH->ctrl_bit.usdulks==RESET);//用户系统数据解锁成功
 
   /* enable the user system data programming operation */
   FLASH->ctrl_bit.usdprgm = TRUE;
@@ -1120,7 +1121,7 @@ uint32_t flash_crc_calibrate(uint32_t start_sector, uint32_t sector_cnt)
 }
 
 /**
-  * @brief  flash non-zero wait area boost enable.
+  * @brief  flash non-zero wait area boost enable. 闪存加速打开与关闭
   * @param  new_state: new state of the flash non-zero wait area boost operation.
   *         this parameter can be: TRUE or FALSE.
   * @retval none
@@ -1131,7 +1132,7 @@ void flash_nzw_boost_enable(confirm_state new_state)
 }
 
 /**
-  * @brief  flash continue read enable.
+  * @brief  flash continue read enable. 连续闪存打开与关闭
   * @param  new_state: new state of the flash continue read enable operation.
   *         this parameter can be: TRUE or FALSE.
   * @retval none

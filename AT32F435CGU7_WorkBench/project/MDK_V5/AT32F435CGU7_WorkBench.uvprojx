@@ -323,7 +323,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>AT32F435CGU7,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\libraries\drivers\inc;..\..\libraries\cmsis\cm4\core_support;..\..\libraries\cmsis\cm4\device_support;..\inc</IncludePath>
+              <IncludePath>..\..\libraries\drivers\inc;..\..\libraries\cmsis\cm4\core_support;..\..\libraries\cmsis\cm4\device_support;..\inc;..\..\Device_Abstract_Layer\Flash\inc;..\..\Device_Services_Layer\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -359,7 +359,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>1</umfTarg>
+            <umfTarg>0</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -368,7 +368,7 @@
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>.\objects\AT32F435CGU7_WorkBench.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -427,14 +427,14 @@
               <FilePath>..\..\libraries\drivers\src\at32f435_437_debug.c</FilePath>
             </File>
             <File>
-              <FileName>at32f435_437_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\libraries\drivers\src\at32f435_437_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>at32f435_437_misc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\drivers\src\at32f435_437_misc.c</FilePath>
+            </File>
+            <File>
+              <FileName>at32f435_437_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\libraries\drivers\src\at32f435_437_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -450,6 +450,31 @@
               <FileName>system_at32f435_437.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\cmsis\cm4\device_support\system_at32f435_437.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>device_abstract_layer</GroupName>
+          <Files>
+            <File>
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Device_Abstract_Layer\Flash\src\flash.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>device_service_layeer</GroupName>
+          <Files>
+            <File>
+              <FileName>flash_serve.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Device_Services_Layer\src\flash_serve.c</FilePath>
+            </File>
+            <File>
+              <FileName>fdi_parame.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Device_Services_Layer\inc\fdi_parame.h</FilePath>
             </File>
           </Files>
         </Group>

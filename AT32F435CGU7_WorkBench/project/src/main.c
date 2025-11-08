@@ -31,6 +31,10 @@
 /* private includes ----------------------------------------------------------*/
 /* add user code begin private includes */
 #include "rtthread.h"
+
+#include "fdi_parame.h"
+#include "flash.h"
+#include "flash_serve.h"
 /* add user code end private includes */
 
 /* private typedef -----------------------------------------------------------*/
@@ -93,7 +97,7 @@ void thread_init()
 	rt_thread_init(&thread_1,"thread_1",thread_1_f,NULL,&thread_1_stack[0],sizeof(thread_1_stack),5,10);
 	rt_thread_startup(&thread_1);
 	
-	rt_thread_init(&thread_2,"thread_2",thread_2_f,NULL,&thread_2_stack[0],sizeof(thread_2_stack),6,10);
+	rt_thread_init(&thread_2,"thread_2",thread_2_f,NULL,&thread_2_stack[0],sizeof(thread_2_stack),5,10);
 	rt_thread_startup(&thread_2);
 	__enable_irq();
 }
@@ -102,6 +106,9 @@ void SystemCoreClockUpdate()
 {
 
 }
+
+
+
 /* add user code end 0 */
 
 /**
@@ -131,14 +138,16 @@ int main(void)
   wk_nvic_config();
 
   /* add user code begin 2 */
-	thread_init();
+	FDI_Flash_Init();
+	fdi_parame_init();
   /* add user code end 2 */
 
   while(1)
   {
     /* add user code begin 3 */
-
-//    /* add user code end 3 */
+			flash.flash_program.func.flash_byte_program(flash.flash_adderess_get.func.sector_address_get(1),0x00);
+			flash.flash_mode_config.func.flash_continue_read_enable(TRUE);
+    /* add user code end 3 */
   }
 }
 

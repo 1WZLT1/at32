@@ -39,3 +39,8 @@
 .\objects\main.o: C:\Users\Dell\AppData\Local\Arm\Packs\RealThread\RT-Thread\3.1.2\include\rtservice.h
 .\objects\main.o: C:\Users\Dell\AppData\Local\Arm\Packs\RealThread\RT-Thread\3.1.2\include\rtm.h
 .\objects\main.o: C:\Users\Dell\AppData\Local\Arm\Packs\RealThread\RT-Thread\3.1.2\include\rtthread.h
+.\objects\main.o: ..\..\Device_Services_Layer\inc\fdi_parame.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\float.h
+.\objects\main.o: ..\..\Device_Abstract_Layer\Flash\inc\flash.h
+.\objects\main.o: ..\inc\fconfig.h
+.\objects\main.o: ..\..\Device_Services_Layer\inc\flash_serve.h

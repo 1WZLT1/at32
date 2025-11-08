@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "xlocale": "c",
+    "memory": "c",
+    "flash.h": "c"
+  }
+}

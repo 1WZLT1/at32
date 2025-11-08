@@ -3,14 +3,26 @@
 ; *************************************************************
 
 LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
-  ER_IROM1 0x08000000 0x00100000  {  ; load address = execution address
+  ER_IROM1 0x08000000 0x000FF800  {  ; load address = execution address
    *.o (RESET, +First)
    *(InRoot$$Sections)
    .ANY (+RO)
    .ANY (+XO)
   }
-  RW_IRAM1 0x20000000 0x00060000  {  ; RW data
+  FDI_FLASH_PARAM_LEN 0x080FF800 0x04 {
+	*(fdi_flash_param_len)
+  }
+  FDI_FLASH_PARAM 0x080FF804 0x7FC {
+	*(fdi_flash_param)
+  }  
+  RW_IRAM1 0x20000000 0x0005F800  {  ; RW data
    .ANY (+RW +ZI)
+  }
+  FDI_PARAME_LEN 0x2005F800 NOCOMPRESS 0x04{
+	*(fdi_param_len)
+  }
+  FDI_PARAME 0x2005F804 NOCOMPRESS 0x7FC { ;FDI_PARAME must be at least 4 and a power of 2 or MAX.
+	*(fdi_parame)
   }
 }
 
