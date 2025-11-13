@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\objects\AT32F435CGU7_WorkBench.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\objects\AT32F435CGU7_WorkBench.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Nov 08 16:05:46 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Nov 13 15:28:01 2025
 <BR><P>
 <H3>Maximum Stack Usage =        300 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -791,7 +791,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FDI_Flash_Init
 </UL>
 
-<P><STRONG><a name="[ac]"></a>Flash_To_SRAM</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, flash_serve.o(i.Flash_To_SRAM))
+<P><STRONG><a name="[ac]"></a>Flash_To_SRAM</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, flash_serve.o(i.Flash_To_SRAM))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Flash_To_SRAM
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
@@ -805,7 +805,7 @@ Global Symbols
 <P><STRONG><a name="[4]"></a>NMI_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, at32f435_437_int.o(i.NMI_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_at32f435_437.o(RESET)
 </UL>
-<P><STRONG><a name="[bd]"></a>SRAM_To_Flash</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, flash_serve.o(i.SRAM_To_Flash))
+<P><STRONG><a name="[bd]"></a>SRAM_To_Flash</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, flash_serve.o(i.SRAM_To_Flash))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = SRAM_To_Flash
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fdi_parame_init
@@ -817,9 +817,9 @@ Global Symbols
 <P><STRONG><a name="[c]"></a>SysTick_Handler</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, board.o(i.SysTick_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = SysTick_Handler &rArr; rt_tick_increase &rArr; rt_timer_check &rArr; rt_timer_start &rArr; _rt_timer_remove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_increase
-<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_interrupt_leave
+<BR>[Calls]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_interrupt_leave
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_interrupt_enter
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_increase
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_at32f435_437.o(RESET)
 </UL>
@@ -915,7 +915,7 @@ Global Symbols
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;wk_system_clock_config
 </UL>
 
-<P><STRONG><a name="[bc]"></a>fdi_parame_init</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, flash_serve.o(i.fdi_parame_init))
+<P><STRONG><a name="[bc]"></a>fdi_parame_init</STRONG> (Thumb, 88 bytes, Stack size 8 bytes, flash_serve.o(i.fdi_parame_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = fdi_parame_init &rArr; SRAM_To_Flash
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SRAM_To_Flash
@@ -1649,9 +1649,9 @@ Global Symbols
 
 <P><STRONG><a name="[f0]"></a>rt_thread_self</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, thread.o(i.rt_thread_self))
 <BR><BR>[Called By]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_thread_startup
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_increase
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_hard_fault_exception
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_sem_take
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_increase
 </UL>
 
 <P><STRONG><a name="[df]"></a>rt_thread_startup</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, thread.o(i.rt_thread_startup))
@@ -1714,10 +1714,10 @@ Global Symbols
 <P><STRONG><a name="[11a]"></a>rt_timer_check</STRONG> (Thumb, 118 bytes, Stack size 16 bytes, timer.o(i.rt_timer_check))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = rt_timer_check &rArr; rt_timer_start &rArr; _rt_timer_remove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_get
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_enable
+<BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_enable
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_disable
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_timer_start
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_get
 <LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_list_isempty
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_rt_timer_remove
 </UL>
@@ -1751,9 +1751,9 @@ Global Symbols
 <P><STRONG><a name="[109]"></a>rt_timer_start</STRONG> (Thumb, 238 bytes, Stack size 32 bytes, timer.o(i.rt_timer_start))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = rt_timer_start &rArr; _rt_timer_remove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_get
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_enable
+<BR>[Calls]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_enable
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_hw_interrupt_disable
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_tick_get
 <LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rt_list_insert_after
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_rt_timer_remove
 </UL>

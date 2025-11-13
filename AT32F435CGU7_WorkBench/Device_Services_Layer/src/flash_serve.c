@@ -11,6 +11,11 @@ uint32_t fdi_sram_len = 0;
 __attribute__((section("fdi_flash_param_len"),used)) \
 uint32_t flash_flash_len = 0;
 
+FDI_PARAM_U8(LT_1) = 1;
+FDI_PARAM_U8(LT_2) = 2;
+FDI_PARAM_U8(LT_3) = 4;
+FDI_PARAM_U8(PARAM_END) = 1;
+
 /*
  * @brief   SRAM To Flash function
  * @param   none
@@ -29,7 +34,7 @@ void SRAM_To_Flash()
 			FDI_SRAM_LOAD_BASE += sizeof(uint8_t);
 	}
 	flash_serve_box.flash_last_address = FDI_FLASH_BASE;
-	flash.flash_program.func.flash_word_program(FDI_FLASH_PARAME_BASE - 0x04 , FDI_PARAME_LoadSection_Len);
+	flash.flash_program.func.flash_word_program(FDI_FLASH_PARAME_BASE - 0x04 , fdi_sram_len);
 	flash.flash_lock_config.func.flash_lock();
 }
 
@@ -38,16 +43,16 @@ void Flash_To_SRAM()
 	/*一致就把flash的值丢到load*/
 		memcpy((void *)&Image$$FDI_PARAME$$Base,
 					 (const void *)FDI_FLASH_PARAME_BASE,
-						FDI_PARAME_LoadSection_Len);
+						fdi_sram_len);
 }
 
 void fdi_parame_init()
 {
-	fdi_sram_len = FDI_PARAME_LoadSection_Len;
+	fdi_sram_len = (uint32_t)&PARAM_END - FDI_SRAM_PARAME_BASE; 
 	/*先load区取长度给fdi_param_len赋值*/
 
 	/*get flash段的fdi_flash_param_len是否有值*/
-	if(flash_flash_len == 0)
+	if(flash_flash_len == 0xFFFFFFFF)
 	{
 			/*把sram load段的数据赋值到 扇区511*/
 			SRAM_To_Flash();
@@ -60,7 +65,7 @@ void fdi_parame_init()
 		{
 				/*是就清除*/
 				flash.flash_lock_config.func.flash_unlock();
-				flash.flash_erase.func.flash_sector_erase(flash.flash_adderess_get.func.sector_address_get(511));
+			  flash.flash_erase.func.flash_sector_erase(flash.flash_adderess_get.func.sector_address_get(511));
 				flash.flash_lock_config.func.flash_bank1_lock();
 		}
 		else 

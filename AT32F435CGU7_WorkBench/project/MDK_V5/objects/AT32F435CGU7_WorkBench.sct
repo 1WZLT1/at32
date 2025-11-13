@@ -9,12 +9,13 @@ LR_IROM1 0x08000000 0x00100000  {    ; load region size_region
    .ANY (+RO)
    .ANY (+XO)
   }
-  FDI_FLASH_PARAM_LEN 0x080FF800 0x04 {
+  FDI_FLASH_PARAM_LEN 0x080FF800 NOCOMPRESS 0x04 {
 	*(fdi_flash_param_len)
   }
-  FDI_FLASH_PARAM 0x080FF804 0x7FC {
+  FDI_FLASH_PARAM 0x080FF804 NOCOMPRESS 0x7FC {
 	*(fdi_flash_param)
   }  
+  
   RW_IRAM1 0x20000000 0x0005F800  {  ; RW data
    .ANY (+RW +ZI)
   }
